@@ -1,6 +1,6 @@
 <html>
   <head>
-    <title>Stavzog</title>
+    <title>w3schools Nav Bar</title>
     <style type="text/css">
 	    .active {
 		  background-color: #308e36;
@@ -30,13 +30,24 @@
 		  background-color: #303331;
 		  overflow: hidden;
 		  padding: 0px;
-		  margin: 0px
+		  margin: auto;
+		  display: block;
+		  clear: left;
+		  position: fixed;
+		  text-align: center;
 		}
-		article {
-			text-align: center;
-			background-color: #eee;
+		.content {
+			background-color: #e5e5e5;
 			border-radius: 25px;
 			border-bottom: 10px solid green;
+			/*height: 500px;*/
+			width: 90%;
+			font-size: 20px;
+			margin: auto;
+		}
+
+		.content article {
+			text-align: center;
 		}
 		.dropdown {
 			display: none;
@@ -66,10 +77,33 @@
 		.show {
 			display: block;
 		}
+
+		.hero-image {
+			background-image: url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSXjmyVVTclwavsgRaLjCwQfGyyguT_0IHcGM6LCe3QXStaJGNACQ');
+			width: 100%;
+			height: 25%;
+		}
+
+		#toTop {
+			display: none; /* Hidden by default */
+		    position: fixed; /* Fixed/sticky position */
+		    bottom: 20px; /* Place the button at the bottom of the page */
+		    right: 30px; /* Place the button 30px from the right */
+		    z-index: 99; /* Make sure it does not overlap */
+		    border: none; /* Remove borders */
+		    outline: none; /* Remove outline */
+		    background-color: red; /* Set a background color */
+		    color: white; /* Text color */
+		    cursor: pointer; /* Add a mouse pointer on hover */
+		    padding: 15px; /* Some padding */
+		    border-radius: 10px;
+
+		}
     </style>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
   </head>
   <body>
+  <div class="hero-image">
     <ul class='nav'>
       <li id='home' class='active'>Home</li>
       <li id='about'><a href='#'>About me</a></li>
@@ -84,19 +118,49 @@
       </ul>
     </div>
     </ul>
+
+    </div>
+    <div class='content'>
     <article>
 
     <h1>Welcome</h1>
 
-    <p>Welcome to my webpage.Here is were I am uploading my work.In case you want to learn <br> more about me hit that "About me " link up there.Now, if you are bored and you <br>want something yo do try visiting that "Games" link.There you 'll see all the games <br>that I make.
+    <p>Welcome to my webpage.Here is were I am uploading my work.In case <br> you want to learn more about me hit that "About me " link up there.Now, if you <br> are bored and youwant something you do try visiting that "Games" link.There you 'll see all the games <br>that I make.
     If you see any issues with this page <a href="https://github.com/stavzog/stavzog.github.io/issues">tell me about it</a>.That's about it.I hope you are having a <br> great time in my webpage!!
     </p>
-    </article>
+    </article><br><br><br><br><br><br>
+
+    <ul style="list-style-type: none;font-family: Courier;">
+    		<li>Email me:<br>
+    			<a style='color: green;text-decoration: none;' href="mailto:stavzog@gmail.com">stavzog@gmail.com</a>
+    		</li><br><br>
+    		<li>Github:<br>
+    			<a style='color: green;text-decoration: none;' href="https://github.com/stavzog/Projects">My projects</a>
+
+    		</li>
+
+
+    	</ul>
+    </div>
+
+    	<button id='toTop'>Top</button>
 
     <script type="text/javascript">
     	$('#games').click(function() {
     		$('.dropdown').toggleClass('show');
     		$('.nav').css('margin',0)
+    	})
+
+    	window.onscroll = function() {
+    		if (document.body.scrollTop > 10 || document.documentElement.scrollTop > 10) {
+		        $('#toTop').css('display','block');
+		    } else {
+		        $('#toTop').css('display', 'none');
+		    }
+    	}
+    	$('#toTop').click(function() {
+    		document.body.scrollTop = 0; // For Chrome, Safari and Opera 
+    		document.documentElement.scrollTop = 0;
     	})
     </script>
   </body>
