@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.5.11/p5.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.5.11/addons/p5.dom.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.5.11/addons/p5.sound.min.js"></script>
+    <script src="sketch.js"></script>
+    <!--<link rel="stylesheet" type="text/css" href="style.css">!-->
+  <style> body {padding: 0; margin: 0;} 
+    .active {
+      background-color: #308e36;
+      display: block;
+      padding: 14px 16px;
+      text-decoration: none;
+      color: white;
+      font-family: Arial;
+    }
+    li a {
+      display: block;
+      background-color: #303331;
+      padding: 14px 16px;
+      text-decoration: none;
+      color: white;
+      font-family: Arial;
+    }
+
+    li {
+      float:left;
+    }
+    li a:hover:not(.active) {
+      background-color: black;
+    }
+    .nav {
+      list-style-type: none;
+      background-color: #303331;
+      overflow: hidden;
+      padding: 0px;
+      margin: 0px 0px 20px 0px;
+    }
+  </style>
+  </head>
+  <body>
+  <ul class='nav'>
+      <li id='home'><a href="home.html">Home</a></li>
+      <li id='about'><a href='#'>About me</a></li>
+      <li id='games' class='active'>Games</li>
+      <li><a href='#'>News</a></li>
+    </ul>
+  </body>
+</html>
