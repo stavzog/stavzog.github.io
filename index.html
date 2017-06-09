@@ -1,6 +1,6 @@
 <html>
   <head>
-    <title>Stavzog</title>
+    <title>w3schools Nav Bar</title>
     <style type="text/css">
 	    .active {
 		  background-color: #308e36;
@@ -35,19 +35,23 @@
 		  clear: left;
 		  position: fixed;
 		  text-align: center;
+		  width: 100%;
 		}
 		.content {
-			background-color: #e5e5e5;
+			/*background-color: #e5e5e5;*/
 			border-radius: 25px;
-			border-bottom: 10px solid green;
+			/*border-bottom: 10px solid green;*/
 			/*height: 500px;*/
-			width: 90%;
-			font-size: 20px;
+			width: 100%;
+			font-size: 25px;
+			font-family: Arial;
+			font-weight: 700;
 			margin: auto;
 		}
 
 		.content article {
 			text-align: center;
+			background-color: 
 		}
 		.dropdown {
 			display: none;
@@ -79,13 +83,13 @@
 		}
 
 		.hero-image {
-			background-image: url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSXjmyVVTclwavsgRaLjCwQfGyyguT_0IHcGM6LCe3QXStaJGNACQ');
+			background-image: url('https://image.freepik.com/free-vector/portfolio-background-design_1300-242.jpg');
 			width: 100%;
-			height: 8.5em;
+			height: 40em;
 			background-position: center;
-		    	background-repeat: no-repeat;
-		    	background-size: 100% 12em;
-		    	position: relative;
+		    background-repeat: no-repeat;
+		    background-size: 100% 40em;
+		    position: relative;
 		}
 
 		#toTop {
@@ -102,6 +106,43 @@
 		    padding: 15px; /* Some padding */
 		    border-radius: 10px;
 
+		}
+
+		.bottoms {
+			margin: 0;
+			background-color: #cccccc;
+			padding-bottom: 5em;
+			font-size: 20px;
+			font-family: Arial;
+			width: 100%;
+			height: 10em;
+
+		}
+
+		.table {
+			display: table;
+		}
+		.col {
+			display: table-cell;
+			padding: 2em;
+		}
+		.visit {
+			font-family: Cursive, Arial, sans-serif;
+			font-size: 20px;
+			color: black;
+		}
+		.link {
+			color: #0aa0c9;
+			text-decoration: none;
+			font-family: Courier;
+			font-size: 20px;
+		}
+		#also-visit {
+			float: left;
+			clear: right;
+			display: block;
+			position: relative;
+			padding: 2em;
 		}
     </style>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
@@ -124,28 +165,48 @@
     </ul>
 
     </div>
+
+    <br><br><br><br><br><br>
     <div class='content'>
     <article>
 
     <h1>Welcome</h1>
 
-    <p>Welcome to my webpage.Here is where I am uploading my work.In case <br> you want to learn more about me hit that "About me " link up there.Now, if you <br> are bored and youwant something you do try visiting that "Games" link.There you 'll see all the games <br>that I make.
-    If you see any issues with this page <a href="https://github.com/stavzog/stavzog.github.io/issues">tell me about it</a>.That's about it.I hope you are having a <br> great time in my webpage!!
+    <p>Welcome to my webpage.Here is where I am uploading my work .In case  you want<br> to learn more about me hit that "About me " link up there.Now, if you are bored<br> and you want something you do, try visiting that "Games" link.There you<br> 'll see all the games that I make.
+    If you see any issues with this page <a href="https://github.com/stavzog/stavzog.github.io/issues">tell me about it</a><br>.That's about it.I hope you are having a <br> great time in my webpage!!
     </p>
     </article><br><br><br><br><br><br>
 
-    <ul style="list-style-type: none;font-family: Courier;">
-    		<li>Email me:<br>
-    			<a style='color: green;text-decoration: none;' href="mailto:stavzog@gmail.com">stavzog@gmail.com</a>
-    		</li><br><br>
-    		<li>Github:<br>
-    			<a style='color: green;text-decoration: none;' href="https://github.com/stavzog/Projects">My projects</a>
-
-    		</li>
+    
+    </div><br>
 
 
-    	</ul>
+    <div class='bottoms'>
+    	<div class='table'>
+
+	    <div class='col'>
+	    	<p>Email me: <br>
+
+	    	<a style='color: green;text-decoration: none;' href="mailto:stavzog@gmail.com">stavzog@gmail.com</a></p>
+
+
+
+    	</div>
+    	<div class='col'>
+
+	    	<p>Github: <br>
+	    			
+	    	<a style='color: green;text-decoration: none;' href="https://github.com/stavzog/Projects">My projects</a></p>
+
+	    </div><br><br>
+
     </div>
+    <div id='also-visit'>
+	    	<span class='visit'>Also visit:</span><a class='link' href="https://gr.interworks.cloud/">interworks.cloud</a>
+    	</div>	
+
+
+   </div>
 
     	<button id='toTop'>Top</button>
 
@@ -156,7 +217,7 @@
     	})
 
     	window.onscroll = function() {
-    		if (document.body.scrollTop > 10 || document.documentElement.scrollTop > 10) {
+    		if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
 		        $('#toTop').css('display','block');
 		    } else {
 		        $('#toTop').css('display', 'none');
