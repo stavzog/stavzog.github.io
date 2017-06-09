@@ -6,7 +6,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.5.11/addons/p5.sound.min.js"></script>
     <script src="sketch.js"></script>
     <!--<link rel="stylesheet" type="text/css" href="style.css">!-->
-  <style> body {padding: 0; margin: 0;} 
+  <style> body {padding: 0; margin: auto;} 
     .active {
       background-color: #308e36;
       display: block;
@@ -30,21 +30,34 @@
     li a:hover:not(.active) {
       background-color: black;
     }
+
+    .hero-image {
+			background-image: url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSXjmyVVTclwavsgRaLjCwQfGyyguT_0IHcGM6LCe3QXStaJGNACQ');
+			width: 100%;
+			height: 25%;
+		}
     .nav {
       list-style-type: none;
       background-color: #303331;
       overflow: hidden;
       padding: 0px;
-      margin: 0px 0px 20px 0px;
+      margin: 0px 0px 90px 0px;
     }
   </style>
   </head>
   <body>
-  <ul class='nav'>
+  <div class="hero-image">
+    <ul class='nav'>
       <li id='home'><a href="index.html">Home</a></li>
       <li id='about'><a href='#'>About me</a></li>
-      <li id='games' class='active'>Games</li>
+      <li id='games' class='active'>Games
+      </li>
+
       <li><a href='#'>News</a></li>
+      <div class='dropdown'>
+    </div>
     </ul>
+
+   </div>
   </body>
 </html>
