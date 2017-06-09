@@ -1,13 +1,65 @@
-<!DOCTYPE html>
 <html>
   <head>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.5.11/p5.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.5.11/addons/p5.dom.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.5.11/addons/p5.sound.min.js"></script>
-    <script src="sketch.js"></script>
-    <!--<link rel="stylesheet" type="text/css" href="style.css">!-->
-  <style> body {padding: 0; margin: 0;} </style>
+    <title>w3schools Nav Bar</title>
+    <style type="text/css">
+	    .active {
+		  background-color: #308e36;
+		  display: block;
+		  padding: 14px 16px;
+		  text-decoration: none;
+		  color: white;
+		  font-family: Arial;
+		}
+		li a {
+		  display: block;
+		  background-color: #303331;
+		  padding: 14px 16px;
+		  text-decoration: none;
+		  color: white;
+		  font-family: Arial;
+		}
+
+		li {
+		  float:left;
+		}
+		li a:hover:not(.active) {
+		  background-color: black;
+		}
+		.nav {
+		  list-style-type: none;
+		  background-color: #303331;
+		  overflow: hidden;
+		  padding: 0px;
+		  margin: 0px
+		}
+		article {
+			text-align: center;
+			background-color: #eee;
+			border-radius: 25px;
+			border-bottom: 10px solid green;
+		}
+    </style>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
   </head>
   <body>
+    <ul class='nav'>
+      <li id='home' class='active'>Home</li>
+      <li id='about'><a href='#'>About me</a></li>
+      <li id='games'><a href='index.html'>Games</a></li>
+      <li><a href='#'>News</a></li>
+    </ul>
+    <article>
+
+    <h1>Welcome</h1>
+
+    <p>Welcome to my webpage.Here is were I am uploading my work.In case you want to learn <br> more about me hit that "About me " link up there.Now, if you are bored and you <br>want something yo do try visiting that "Games" link.There you 'll see all the games <br>that I make.
+    If you see any issues with this page <a href="https://github.com/stavzog/stavzog.github.io/issues">tell me about it.That's about it.I hope you are having a <br> great time in my webpage!!</a>
+    </p>
+    </article>
+
+    <script type="text/javascript">
+    	$('#games').click(function() {
+    	})
+    </script>
   </body>
 </html>
