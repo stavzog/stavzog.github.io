@@ -9,11 +9,11 @@ var slow;
 
 
 function setup() {
-	var cnv = createCanvas(600,600);
+	var cnv = createCanvas(600,400);
 	dinosaur = new Dinosaur(0,height/2);
 	//frameRate(10)
 	gravity = createVector(0,0.2)
-	obstacle = createVector(300,height/2);
+	obstacle = createVector(300,300);
 	booster = createVector(floor(random(width-80)),300);
 	slow = createVector(floor(random(width-80)),300);
 	// cnv.mouseClicked(dinosaur.jump());
@@ -39,7 +39,7 @@ function mousePressed() {
 }
 
 function newLocation() {
-	obstacle = createVector(random(width),height/2);
+	obstacle = createVector(random(width),300);
 	booster = createVector(floor(random(width-80)),300);
 	slow = createVector(floor(random(width-80)),300);
 }	
