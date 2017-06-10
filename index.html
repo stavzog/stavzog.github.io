@@ -9,6 +9,8 @@
 		  text-decoration: none;
 		  color: white;
 		  font-family: Arial;
+		  font-size: 20px;
+		  position: relative;
 		}
 		.nav li a {
 		  display: block;
@@ -17,6 +19,8 @@
 		  text-decoration: none;
 		  color: white;
 		  font-family: Arial;
+		  font-size: 20px;
+		  position: relative;
 		}
 
 		.nav li {
@@ -36,6 +40,7 @@
 		  position: fixed;
 		  text-align: center;
 		  width: 100%;
+		  position: absolute;
 		}
 		.content {
 			/*background-color: #e5e5e5;*/
@@ -121,6 +126,7 @@
 
 		.table {
 			display: table;
+			margin-left: 10em;
 		}
 		.col {
 			display: table-cell;
@@ -143,72 +149,76 @@
 			display: block;
 			position: relative;
 			padding: 2em;
+			margin-left: 10em;
+		}
+
+		footer {
+			background-color: #303331;
+			text-align: center;
+			color: white;
+			font-size: 20px;
+			font-family: Arial;
+			padding: 1em;
 		}
     </style>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
   </head>
   <body>
+  <header>
   <div class="hero-image">
-    <ul class='nav'>
-      <li id='home' class='active'>Home</li>
-      <li id='about'><a href='#'>About me</a></li>
-      <li id='games'><a href='#'>Games</a>
-      </li>
+  	<nav>
+		<ul class='nav'>
+	    	<li id='home' class='active'>Home</li>
+	      	<li id='about'><a href='#'>About me</a></li>
+	    	<li id='games'><a href='#'>Games</a>
+	      	</li>
 
-      <li><a href='#'>News</a></li>
-      <div class='dropdown'>
-    	<ul>
-      	<li><a href="games.html">Cuber</a></li>
-      	<li><a href="#">Snake</a></li>
-      </ul>
-    </div>
-    </ul>
-
-    </div>
-
+	    	<li><a href='#'>News</a></li>
+	    	<div class='dropdown'>
+		    	<ul>
+			      	<li><a href="games.html">Cuber</a></li>
+			      	<li><a href="#">Snake</a></li>
+		      	</ul>
+    	  	</div>
+    	</ul>
+    </nav>
+	</div>
+    </header>
     <br><br><br><br><br><br>
-    <div class='content'>
-    <article>
+    <section>
+	    <div class='content'>
+		    <article>
 
-    <h1>Welcome</h1>
+			    <h1>Welcome</h1>
 
-    <p>Welcome to my webpage.Here is where I am uploading my work .In case  you want<br> to learn more about me hit that "About me " link up there.Now, if you are bored<br> and you want something you do, try visiting that "Games" link.There you<br> 'll see all the games that I make.
-    If you see any issues with this page <a href="https://github.com/stavzog/stavzog.github.io/issues">tell me about it</a><br>.That's about it.I hope you are having a <br> great time in my webpage!!
-    </p>
-    </article><br><br><br><br><br><br>
-
-    
-    </div><br>
-
-
+			    <p>Welcome to my webpage.Here is were I am uploading my work .In case  you want<br> to learn more about me hit that "About me " link up there.Now, if you are bored<br> and you want something you do, try visiting that "Games" link.There you<br> 'll see all the games that I make.
+			    If you see any issues with this page <a href="https://github.com/stavzog/stavzog.github.io/issues">tell me about it</a><br>.That's about it.I hope you are having a <br> great time in my webpage!!
+			    </p>
+		    </article><br><br><br><br><br><br>	    
+	    </div><br>
+    </section>
+    <section>
     <div class='bottoms'>
     	<div class='table'>
-
-	    <div class='col'>
+	  	 <div class='col'>
 	    	<p>Email me: <br>
-
 	    	<a style='color: green;text-decoration: none;' href="mailto:stavzog@gmail.com">stavzog@gmail.com</a></p>
-
-
-
     	</div>
     	<div class='col'>
-
 	    	<p>Github: <br>
-	    			
 	    	<a style='color: green;text-decoration: none;' href="https://github.com/stavzog/Projects">My projects</a></p>
-
 	    </div><br><br>
-
     </div>
     <div id='also-visit'>
 	    	<span class='visit'>Also visit:</span><a class='link' href="https://gr.interworks.cloud/">interworks.cloud</a>
-    	</div>	
-
-
+    </div>	
    </div>
 
-    	<button id='toTop'>Top</button>
+   </section>
+
+    <button id='toTop'>Top</button>
+
+    <footer>&copy; by Stavzog</footer>
 
     <script type="text/javascript">
     	$('#games').click(function() {
