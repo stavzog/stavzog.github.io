@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stavros Zografos</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <main>
+        <h1>Stavros Zografos</h1>
+        <p>Hi, I'm Stavros. I like creating tools focused on simplicity and elegance.</p>
+
+        <h2>Recent Blog Posts</h2>
+        <ul>
+            {{ range .BlogPosts }}
+            <li><a href="/blog/{{ .Slug }}.html">{{ .Title }}</a> ({{ .Date }})</li>
+            {{ end }}
+        </ul>
+
+        <h2>Recent Projects</h2>
+        <ul>
+            {{ range .Projects }}
+            <li><a href="/projects/{{ .Slug }}.html">{{ .Title }}</a> - <span>{{ .Status }}</span></li>
+            {{ end }}
+        </ul>
+    </main>
+</body>
+</html>
