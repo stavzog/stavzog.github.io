@@ -1,20 +1,32 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ .Title }} - Stavros Zografos</title>
-    <link rel="stylesheet" href="/static/style.css">
-</head>
-<body>
-    <nav>
-        <a href="/">← Back Home</a>
-    </nav>
-    <article>
-        <h1>{{ .Title }}</h1>
-        <p><em>Published on {{ .Date }}</em></p>
-        <hr>
-        {{ .Content }}
-    </article>
-</body>
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>{{ .Title }} - Stavros Zografos</title>
+        <link rel="stylesheet" href="/static/style.css" />
+    </head>
+    <body>
+        <div class="site-container">
+            <div class="article-layout">
+                <nav class="back-nav">
+                    <a href="/">Index</a>
+                </nav>
+
+                <article class="post">
+                    <header class="post-header">
+                        <h1 class="post-title">{{ .DisplayTitle }}</h1>
+                        <div class="post-date">{{ .Date }}</div>
+                    </header>
+
+                    <div class="post-content">{{ .Content }}</div>
+                </article>
+
+                <footer class="connect article-layout-footer">
+                    <a href="https://github.com/stavzog">Github</a>
+                    <a href="mailto:stavzog@gmail.com">Email</a>
+                </footer>
+            </div>
+        </div>
+    </body>
 </html>

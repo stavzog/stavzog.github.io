@@ -1,29 +1,104 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Stavros Zografos</title>
-    <link rel="stylesheet" href="/static/style.css">
-</head>
-<body>
-    <main>
-        <h1>Stavros Zografos</h1>
-        <p>Hi, I'm Stavros. I like creating tools focused on simplicity and elegance.</p>
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Stavros Zografos</title>
+        <link rel="stylesheet" href="/static/style.css" />
+    </head>
+    <body>
+        <div class="site-container">
+            <header>
+                <div class="logo">Stavros Zografos</div>
+            </header>
 
-        <h2>Recent Blog Posts</h2>
-        <ul>
-            {{ range .BlogPosts }}
-            <li><a href="/blog/{{ .Slug }}.html">{{ .Title }}</a> ({{ .Date }})</li>
-            {{ end }}
-        </ul>
+            <section class="hero">
+                <div class="hero-serif">
+                    I focus on deconstructing <br />
+                    complexity for elegant architectures.
+                </div>
+                <div class="hero-sans">
+                    <p>
+                        Hey, I'm Stavros, currently a sophomore at Pomona
+                        College studying Computer Science. I work on all sorts
+                        of coding projects as I try to learn and grow as a
+                        developer. My favorite part about writing code is coming
+                        up with elegant architectures, informed by the raw data.
+                    </p>
+                    <p>
+                        Outside of coding, I enjoy doing sports (currently
+                        exploring lacrosse), living the college life with
+                        friends and learning about random topics. My most recent
+                        random topic is sewing clothes
+                    </p>
+                </div>
+            </section>
 
-        <h2>Recent Projects</h2>
-        <ul>
-            {{ range .Projects }}
-            <li><a href="/projects/{{ .Slug }}.html">{{ .Title }}</a> - <span>{{ .Status }}</span></li>
-            {{ end }}
-        </ul>
-    </main>
-</body>
+            <section class="index-table">
+                <div class="index-col">
+                    <h4>Building</h4>
+                    <ul class="index-list">
+                        <li class="index-item">
+                            <span class="title">Data Oriented Design</span>
+                            <span class="desc"
+                                >Researching cache locality and memory
+                                layout.</span
+                            >
+                        </li>
+                        <li class="index-item">
+                            <span class="title">Kamvas Rewrite</span>
+                            <span class="desc"
+                                >A productivity canvas being rebuilt in
+                                Rust.</span
+                            >
+                        </li>
+                        <li class="index-item">
+                            <span class="title">C & Hardware</span>
+                            <span class="desc"
+                                >Lowering the level of abstraction.</span
+                            >
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="index-col">
+                    <h4>Projects</h4>
+                    <ul class="index-list">
+                        {{ range .Projects }}
+                        <li class="index-item">
+                            <a href="/projects/{{ .Slug }}.html">
+                                <span class="title">{{ .Title }}</span>
+                                <span class="desc"
+                                    >View project details and
+                                    architecture.</span
+                                >
+                                <span class="meta">{{ .Status }}</span>
+                            </a>
+                        </li>
+                        {{ end }}
+                    </ul>
+                </div>
+
+                <div class="index-col">
+                    <h4>Writings</h4>
+                    <ul class="index-list">
+                        {{ range .BlogPosts }}
+                        <li class="index-item">
+                            <a href="/blog/{{ .Slug }}.html">
+                                <span class="title">{{ .Title }}</span>
+                                <span class="desc">Read full post.</span>
+                                <span class="meta">{{ .Date }}</span>
+                            </a>
+                        </li>
+                        {{ end }}
+                    </ul>
+                </div>
+            </section>
+
+            <footer class="connect">
+                <a href="https://github.com/stavzog">Github</a>
+                <a href="mailto:stavzog@gmail.com">Email</a>
+            </footer>
+        </div>
+    </body>
 </html>

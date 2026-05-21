@@ -12,15 +12,17 @@ import (
 	"strings"
 
 	"github.com/yuin/goldmark"
+	highlighting "github.com/yuin/goldmark-highlighting/v2"
 	"gopkg.in/yaml.v3"
 )
 
 type Page struct {
-	Title   string `yaml:"title"`
-	Date    string `yaml:"date"`
-	Status  string `yaml:"status,omitempty"` // For projects
-	Content template.HTML
-	Slug    string
+	Title        string        `yaml:"title"`
+	DisplayTitle template.HTML // For bottom-heavy formatting
+	Date         string        `yaml:"date"`
+	Status       string        `yaml:"status,omitempty"` // For projects
+	Content      template.HTML
+	Slug         string
 }
 
 type SiteData struct {
@@ -38,15 +40,23 @@ func main() {
 	os.RemoveAll(outputDir)
 	os.MkdirAll(outputDir, 0755)
 
-	// Initialize goldmark
-	md := goldmark.New()
+	// Initialize goldmark with highlighting
+	md := goldmark.New(
+		goldmark.WithExtensions(
+			highlighting.NewHighlighting(
+				highlighting.WithStyle("igor"), // theme
+			),
+		),
+	)
 
 	siteData := SiteData{}
 
 	// 2. Process Blog Posts
+	fmt.Println("Processing blog posts...")
 	siteData.BlogPosts = processDirectory(filepath.Join(contentDir, "blog"), md)
 
 	// 3. Process Projects
+	fmt.Println("Processing projects...")
 	siteData.Projects = processDirectory(filepath.Join(contentDir, "projects"), md)
 
 	// Sort by date descending
@@ -54,12 +64,14 @@ func main() {
 	sortPages(siteData.Projects)
 
 	// 4. Load Templates
+	fmt.Println("Loading templates...")
 	tmpl, err := template.ParseGlob(filepath.Join(templateDir, "*.html"))
 	if err != nil {
 		log.Fatalf("error parsing templates: %v", err)
 	}
 
 	// 5. Generate Individual Pages
+	fmt.Println("Generating individual pages...")
 	for _, p := range siteData.BlogPosts {
 		generatePage(filepath.Join(outputDir, "blog", p.Slug+".html"), "post.html", tmpl, p)
 	}
@@ -68,9 +80,11 @@ func main() {
 	}
 
 	// 6. Generate Index Page
+	fmt.Println("Generating index page...")
 	generatePage(filepath.Join(outputDir, "index.html"), "index.html", tmpl, siteData)
 
 	// 7. Copy static assets
+	fmt.Println("Copying static assets...")
 	copyStatic("static", filepath.Join(outputDir, "static"))
 
 	fmt.Println("Build complete!")
@@ -105,11 +119,42 @@ func processDirectory(dir string, md goldmark.Markdown) []Page {
 		}
 		page.Content = template.HTML(buf.String())
 		page.Slug = strings.TrimSuffix(d.Name(), ".md")
+		page.DisplayTitle = formatBottomHeavy(page.Title)
 
 		pages = append(pages, page)
 		return nil
 	})
 	return pages
+}
+
+func formatBottomHeavy(title string) template.HTML {
+	words := strings.Fields(title)
+	if len(words) < 4 {
+		return template.HTML(title)
+	}
+
+	bestBreak := len(words) / 2
+	minDiff := 1000000
+
+	for i := 1; i < len(words); i++ {
+		line1 := strings.Join(words[:i], " ")
+		line2 := strings.Join(words[i:], " ")
+
+		len1 := len(line1)
+		len2 := len(line2)
+
+		// Goal: line2 > line1, and minimize the difference
+		if len2 >= len1 {
+			diff := len2 - len1
+			if diff < minDiff {
+				minDiff = diff
+				bestBreak = i
+			}
+		}
+	}
+
+	formatted := strings.Join(words[:bestBreak], " ") + "<br>" + strings.Join(words[bestBreak:], " ")
+	return template.HTML(formatted)
 }
 
 func generatePage(outPath string, tmplName string, tmpl *template.Template, data interface{}) {
