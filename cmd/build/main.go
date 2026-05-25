@@ -28,6 +28,7 @@ type Page struct {
 type SiteData struct {
 	BlogPosts []Page
 	Projects  []Page
+	Building  []Page
 }
 
 func main() {
@@ -59,18 +60,23 @@ func main() {
 	fmt.Println("Processing projects...")
 	siteData.Projects = processDirectory(filepath.Join(contentDir, "projects"), md)
 
+	// 4. Process Building entries
+	fmt.Println("Processing building entries...")
+	siteData.Building = processDirectory(filepath.Join(contentDir, "building"), md)
+
 	// Sort by date descending
 	sortPages(siteData.BlogPosts)
 	sortPages(siteData.Projects)
+	sortPages(siteData.Building)
 
-	// 4. Load Templates
+	// 5. Load Templates
 	fmt.Println("Loading templates...")
 	tmpl, err := template.ParseGlob(filepath.Join(templateDir, "*.html"))
 	if err != nil {
 		log.Fatalf("error parsing templates: %v", err)
 	}
 
-	// 5. Generate Individual Pages
+	// 6. Generate Individual Pages
 	fmt.Println("Generating individual pages...")
 	for _, p := range siteData.BlogPosts {
 		generatePage(filepath.Join(outputDir, "blog", p.Slug+".html"), "post.html", tmpl, p)
@@ -78,8 +84,11 @@ func main() {
 	for _, p := range siteData.Projects {
 		generatePage(filepath.Join(outputDir, "projects", p.Slug+".html"), "project.html", tmpl, p)
 	}
+	for _, p := range siteData.Building {
+		generatePage(filepath.Join(outputDir, "building", p.Slug+".html"), "building.html", tmpl, p)
+	}
 
-	// 6. Generate Index Page
+	// 7. Generate Index Page
 	fmt.Println("Generating index page...")
 	generatePage(filepath.Join(outputDir, "index.html"), "index.html", tmpl, siteData)
 
