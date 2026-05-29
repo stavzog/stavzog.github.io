@@ -13,14 +13,14 @@
                     <a href="/">Index</a>
                 </nav>
 
-                <article class="building">
-                    <header class="building-header">
-                        <h1 class="building-title">{{ .DisplayTitle }}</h1>
-                        <div class="building-meta">Status: {{ .Status }}</div>
-                        <div class="building-date">Last updated: {{ .Date }}</div>
+                <article class="post">
+                    <header class="post-header">
+                        <h1 class="post-title">{{ .DisplayTitle }}</h1>
+                        <div class="post-date">Status: {{ .Status }}</div>
+                        <div class="post-date">Last updated: {{ .Date }}</div>
                     </header>
 
-                    <div class="building-content">{{ .Content }}</div>
+                    <div class="post-content">{{ .Content }}</div>
                 </article>
 
                 <footer class="connect article-layout-footer">
