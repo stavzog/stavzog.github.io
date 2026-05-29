@@ -10,7 +10,7 @@ status: MVP complete
 
 Project Kamvas allows you to create dynamic modules (Markdown, Code, Web, and more) that interact through semantic flow lines, creating a unified interface for your digital life. It provides a boundless spatial environment where modules live side-by-side, allowing for complex cross-referencing and visual "flow."
 
-![showecase.png](showcase.png)
+![/static/showcase.png](showcase.png)
 
 Project Kamvas is meant to be used to organize and plan and build projects. The (currently not too wide) selection of modules allows the user to configure their workflow according to the needs of their project. It tries to minimize the friction between the ideas we hold in our head and the way they can be effectively represented outside our minds.
 

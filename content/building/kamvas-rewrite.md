@@ -1,7 +1,7 @@
 ---
 title: Kamvas Rewrite
 date: 2026-05-18
-status: In Progress
+status: Paused
 ---
 A complete rewrite of the [Kamvas](https://github.com/stavzog/project_kamvas) productivity canvas application in Rust, focusing on performance and a modular architecture.
 

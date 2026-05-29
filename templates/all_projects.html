@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>All Projects - Stavros Zografos</title>
+        <link rel="stylesheet" href="/static/style.css" />
+    </head>
+    <body>
+        <div class="site-container">
+            <div class="article-layout">
+                <nav class="back-nav">
+                    <a href="/">Index</a>
+                </nav>
+
+                <div class="post">
+                    <header class="post-header">
+                        <h1 class="post-title" style="text-align: left;">All Projects</h1>
+                    </header>
+
+                    <div class="post-content">
+                        <ul class="index-list">
+                            {{ range .Projects }}
+                            <li class="index-item">
+                                <a href="/projects/{{ .Slug }}.html">
+                                    <span class="title">{{ .Title }}</span>
+                                    <span class="desc">View project details.</span>
+                                    <span class="meta">{{ .Status }}</span>
+                                </a>
+                            </li>
+                            {{ end }}
+                        </ul>
+                    </div>
+                </div>
+
+                <footer class="connect article-layout-footer">
+                    <a href="https://github.com/stavzog">Github</a>
+                    <a href="mailto:stavzog@gmail.com">Email</a>
+                </footer>
+            </div>
+        </div>
+    </body>
+</html>

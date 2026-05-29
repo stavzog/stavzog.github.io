@@ -25,10 +25,17 @@ type Page struct {
 	Slug         string
 }
 
+type PinnedSlugs struct {
+	Writings []string `yaml:"writings"`
+	Projects []string `yaml:"projects"`
+}
+
 type SiteData struct {
-	BlogPosts []Page
-	Projects  []Page
-	Building  []Page
+	BlogPosts       []Page
+	Projects        []Page
+	Building        []Page
+	PinnedWritings  []Page
+	PinnedProjects  []Page
 }
 
 func main() {
@@ -50,21 +57,38 @@ func main() {
 		),
 	)
 
+	// Read and parse pinned.yaml
+	fmt.Println("Reading pinned items configuration...")
+	pinnedFile, err := os.ReadFile("pinned.yaml")
+	if err != nil {
+		log.Fatalf("error reading pinned.yaml: %v", err)
+	}
+	var pinnedSlugs PinnedSlugs
+	if err := yaml.Unmarshal(pinnedFile, &pinnedSlugs); err != nil {
+		log.Fatalf("error parsing pinned.yaml: %v", err)
+	}
+
 	siteData := SiteData{}
 
 	// 2. Process Blog Posts
 	fmt.Println("Processing blog posts...")
-	siteData.BlogPosts = processDirectory(filepath.Join(contentDir, "blog"), md)
+	allBlogPosts := processDirectory(filepath.Join(contentDir, "blog"), md)
+	siteData.BlogPosts = allBlogPosts // For all_writings.html
 
 	// 3. Process Projects
 	fmt.Println("Processing projects...")
-	siteData.Projects = processDirectory(filepath.Join(contentDir, "projects"), md)
+	allProjects := processDirectory(filepath.Join(contentDir, "projects"), md)
+	siteData.Projects = allProjects // For all_projects.html
 
 	// 4. Process Building entries
 	fmt.Println("Processing building entries...")
 	siteData.Building = processDirectory(filepath.Join(contentDir, "building"), md)
 
-	// Sort by date descending
+	// Filter for pinned items
+	siteData.PinnedWritings = filterPinned(allBlogPosts, pinnedSlugs.Writings)
+	siteData.PinnedProjects = filterPinned(allProjects, pinnedSlugs.Projects)
+
+	// Sort by date descending (for "All" pages)
 	sortPages(siteData.BlogPosts)
 	sortPages(siteData.Projects)
 	sortPages(siteData.Building)
@@ -92,7 +116,15 @@ func main() {
 	fmt.Println("Generating index page...")
 	generatePage(filepath.Join(outputDir, "index.html"), "index.html", tmpl, siteData)
 
-	// 7. Copy static assets
+	// 8. Generate All Writings Page
+	fmt.Println("Generating all writings page...")
+	generatePage(filepath.Join(outputDir, "all_writings.html"), "all_writings.html", tmpl, siteData)
+
+	// 9. Generate All Projects Page
+	fmt.Println("Generating all projects page...")
+	generatePage(filepath.Join(outputDir, "all_projects.html"), "all_projects.html", tmpl, siteData)
+
+	// 10. Copy static assets
 	fmt.Println("Copying static assets...")
 	copyStatic("static", filepath.Join(outputDir, "static"))
 
@@ -183,6 +215,21 @@ func sortPages(pages []Page) {
 	sort.Slice(pages, func(i, j int) bool {
 		return pages[i].Date > pages[j].Date
 	})
+}
+
+func filterPinned(pages []Page, slugs []string) []Page {
+	var pinned []Page
+	slugMap := make(map[string]Page)
+	for _, p := range pages {
+		slugMap[p.Slug] = p
+	}
+
+	for _, slug := range slugs {
+		if p, found := slugMap[slug]; found {
+			pinned = append(pinned, p)
+		}
+	}
+	return pinned
 }
 
 func copyStatic(src, dst string) {

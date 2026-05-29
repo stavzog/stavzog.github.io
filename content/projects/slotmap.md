@@ -37,7 +37,7 @@ manager.remove(h1, |last_idx, to_rem_idx| {
 
 ## Why not a Vec<T> or a HashMap<K, V>?
 
-The `SlotManager` provides $O(1)$ access via stable handles, combining the performance of a `Vec` with the stability of a `HashMap`. Like a `Vec`, it stores data contiguously for maximum iteration speed and avoids the overhead of a hash function. However, while a `Vec` is unstable because removals shift elements and invalidate indices, the `SlotManager` maintains stable handles throughout the lifecycle of the data, providing the same reliability as a `HashMap` without the cost of non-contiguous memory access.
+The `SlotManager` provides O(1) access via stable handles, combining the performance of a `Vec` with the stability of a `HashMap`. Like a `Vec`, it stores data contiguously for maximum iteration speed and avoids the overhead of a hash function. However, while a `Vec` is unstable because removals shift elements and invalidate indices, the `SlotManager` maintains stable handles throughout the lifecycle of the data, providing the same reliability as a `HashMap` without the cost of non-contiguous memory access.
 
 ## Motivation
 

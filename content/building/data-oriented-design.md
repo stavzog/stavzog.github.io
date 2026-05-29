@@ -1,7 +1,7 @@
 ---
 title: Researching DOD
 date: 2026-05-10
-status: In Progress
+status: Active
 ---
 
 I am currently researching the methodology and applications of Data Oriented Design.
