@@ -4,8 +4,6 @@ date: 2026-05-25
 status: In Progress
 ---
 
-## Project Overview
-
 The Parametric Embroidery App is a web-based tool designed to empower artists and designers to create complex and reusable stitch patterns. It bridges the gap between high-level design intent and low-level stitch control, offering a non-destructive workflow where designs can be regenerated parametrically. This team project is being developed under the guidance of my professor at Pomona College.
 
 ## My Role: Backend Development
