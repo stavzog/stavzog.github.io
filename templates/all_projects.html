@@ -4,6 +4,7 @@
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>All Projects - Stavros Zografos</title>
+        <link rel="icon" type="image/svg+xml" href="/static/favicon.svg" />
         <link rel="stylesheet" href="/static/style.css" />
     </head>
     <body>
@@ -56,6 +57,12 @@
                     tab.classList.toggle('clicked');
                 });
             }
+
+            var colors = ['#e02875', '#002bf0', '#177a4b'];
+            var random_color = colors[Math.floor(Math.random() * colors.length)];
+            document.querySelectorAll('.index-item .meta').forEach((item) => {
+                item.style.color = random_color;
+            });
         </script>
     </body>
 </html>
