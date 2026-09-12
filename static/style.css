@@ -500,10 +500,14 @@ a.logo {
 }
 
 .post-content img {
+    display: block;
     max-width: 100%;
     height: auto;
-    display: block;
     border: 1px solid var(--line-main);
+    box-sizing: border-box;
+}
+
+.post-content p:has(> img) {
     margin: 2rem 0;
 }
 
