@@ -9,7 +9,8 @@
     <body>
         <div class="site-container">
             <header>
-                <div class="logo">Stavros Zografos</div>
+                <a href="/" class="logo">Stavros Zografos</a>
+                <button class="tailor-tab" id="tailorTab" aria-label="Toggle accent"></button>
             </header>
 
             <section class="hero">
@@ -20,14 +21,15 @@
                 </div>
                 <div class="hero-sans">
                     <p>
-                        I'm Stavros, a Computer Science student at Pomona College. My
-                        current work involves developing efficient systems. I focus
-                        on understanding underlying data structures and on low-level
-                        performance considerations.
+                        I am Stavros Zografos, studying computer science at Pomona College. I
+                        build software from deliberate architectures. I enjoy spending time to
+                        find the exact data structures needed to make a system robust. Right
+                        now, that means low-level engineering and data-oriented design. Currently,
+                        my work centers on low-level systems and flat memory layouts. The goal is
+                        to find the essential structure and execute it directly.
                     <p>
-                        Away from my desk, you'll find me playing sports (currently exploring
-                        lacrosse), enjoying college life, and picking up diverse skills, like
-                        my current interest in sewing.
+                        Away from my desk, you'll find me playing lacrosse, going out for coffee, and
+                        picking up diverse skills, like my current interest in sewing.
                     </p>
                 </div>
             </section>
@@ -66,7 +68,7 @@
                     <a href="/all_projects.html" class="all-link">All Projects &rarr;</a>
                 </div>
 
-                <div class="index-col">
+                <!--<div class="index-col">
                     <h4>Writings</h4>
                     <ul class="index-list">
                         {{ range .PinnedWritings }}
@@ -80,13 +82,29 @@
                         {{ end }}
                     </ul>
                     <a href="/all_writings.html" class="all-link">All Writings &rarr;</a>
-                </div>
+                </div>-->
             </section>
 
             <footer class="connect">
                 <a href="https://github.com/stavzog">Github</a>
                 <a href="mailto:stavzog@gmail.com">Email</a>
+                <a href="https://www.linkedin.com/in/stavzog/">LinkedIn</a>
             </footer>
         </div>
+        <script>
+            const tab = document.getElementById('tailorTab');
+            if (tab) {
+                tab.addEventListener('click', () => {
+                    tab.classList.toggle('clicked');
+                });
+            }
+
+            var colors = ['#e02875', '#002bf0', '#177a4b'];
+            var random_color = colors[Math.floor(Math.random() * colors.length)];
+            document.querySelectorAll('.index-item .meta').forEach((item) => {
+                item.style.color = random_color;
+            });
+
+        </script>
     </body>
 </html>

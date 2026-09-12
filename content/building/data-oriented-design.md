@@ -1,6 +1,6 @@
 ---
 title: Researching DOD
-date: 2026-05-10
+date: 2026-09-12
 status: Active
 ---
 
@@ -9,9 +9,14 @@ This involves researching cache locality, memory layout, and efficient data stru
 
 My conclusions are:
 
-- DOD makes everything faster because of cache locality.
-- DOD is easier to reason about than object-oriented design. Extensibility is easier
+- DOD often makes everything faster because of cache locality.
+- DOD is easier to reason about compared to object-oriented design. Extensibility is easier
 - The way of working is: start with arrays and basic data structures, upgrade to increasingly more complex data structures when things fail.
+
+---
+
+**2026-09**
+Exploring how DOD can be applied to a multilayer-perceptron architecture. The traditional way is with each layer being its own object that manages its own state, but DOD allows for more efficient memory usage and cache locality. For example, I am experimenting with holding all parameters in one big master array.
 
 ---
 

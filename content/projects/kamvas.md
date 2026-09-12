@@ -1,7 +1,7 @@
 ---
 title: Project Kamvas
 date: 2026-01-24
-status: MVP complete
+status: Early Development
 ---
 
 ##### A Vast, Fluid Workspace for Human-Data Interaction.
@@ -31,3 +31,7 @@ The main idea that guides all of my architecture decisions is that the code shou
 > Currently the project is an MVP. The core functionality is there but *Module Actions* are very limited in how they work.
 
 ---
+
+## Next Steps
+
+For now, the Kamvas project is paused. However, there are plans to rebuild it from scratch using a different architecture. I want to shift from KMP to Rust and `egui`. `egui` is a modern, immediate-mode GUI library and it has no internal state management. This means that I can take full control of the state management strategy and come up with something that is efficient and specific to the needs of the project. The general line of thinking is that I will use `egui` for the main GUI layer, but the modules will be web-views. Effectively, kamvas will be a manager of web-views. I made this decision because web technologies are the most effective choice for extensibility and there is already a wide ecosystem of libraries and tools available that I can use to create the different modules that I need. In this context, rust and my custom state management architecture will prioritize performance snappiness of the web-views.

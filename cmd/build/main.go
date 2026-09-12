@@ -31,11 +31,11 @@ type PinnedSlugs struct {
 }
 
 type SiteData struct {
-	BlogPosts       []Page
-	Projects        []Page
-	Building        []Page
-	PinnedWritings  []Page
-	PinnedProjects  []Page
+	BlogPosts      []Page
+	Projects       []Page
+	Building       []Page
+	PinnedWritings []Page
+	PinnedProjects []Page
 }
 
 func main() {
@@ -117,8 +117,10 @@ func main() {
 	generatePage(filepath.Join(outputDir, "index.html"), "index.html", tmpl, siteData)
 
 	// 8. Generate All Writings Page
-	fmt.Println("Generating all writings page...")
-	generatePage(filepath.Join(outputDir, "all_writings.html"), "all_writings.html", tmpl, siteData)
+	// NO WRITINGS TO SHOW YET
+	// WILL BE ADDED IN THE FUTURE
+	// fmt.Println("Generating all writings page...")
+	// generatePage(filepath.Join(outputDir, "all_writings.html"), "all_writings.html", tmpl, siteData)
 
 	// 9. Generate All Projects Page
 	fmt.Println("Generating all projects page...")
