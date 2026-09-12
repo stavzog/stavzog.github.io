@@ -499,6 +499,14 @@ a.logo {
     text-decoration-color: var(--c-cobalt);
 }
 
+.post-content img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    border: 1px solid var(--line-main);
+    margin: 2rem 0;
+}
+
 /* Boxy Code Blocks */
 .post-content pre {
     background: #fbfbfb !important;
