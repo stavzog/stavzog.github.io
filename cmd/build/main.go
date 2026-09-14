@@ -8,10 +8,12 @@ import (
 	"log"
 	"os"
 	"path/filepath"
+	"regexp"
 	"sort"
 	"strings"
 
 	"github.com/yuin/goldmark"
+	"github.com/yuin/goldmark/renderer/html"
 	highlighting "github.com/yuin/goldmark-highlighting/v2"
 	"gopkg.in/yaml.v3"
 )
@@ -48,8 +50,11 @@ func main() {
 	os.RemoveAll(outputDir)
 	os.MkdirAll(outputDir, 0755)
 
-	// Initialize goldmark with highlighting
+	// Initialize goldmark with highlighting and raw HTML support
 	md := goldmark.New(
+		goldmark.WithRendererOptions(
+			html.WithUnsafe(),
+		),
 		goldmark.WithExtensions(
 			highlighting.NewHighlighting(
 				highlighting.WithStyle("igor"), // theme
@@ -156,8 +161,10 @@ func processDirectory(dir string, md goldmark.Markdown) []Page {
 			return fmt.Errorf("error parsing yaml in %s: %v", path, err)
 		}
 
+		rawContent := expandEmbeds(parts[2])
+
 		var buf bytes.Buffer
-		if err := md.Convert([]byte(parts[2]), &buf); err != nil {
+		if err := md.Convert([]byte(rawContent), &buf); err != nil {
 			return err
 		}
 		page.Content = template.HTML(buf.String())
@@ -168,6 +175,44 @@ func processDirectory(dir string, md goldmark.Markdown) []Page {
 		return nil
 	})
 	return pages
+}
+
+var embedRegex = regexp.MustCompile(`{{\s*embed\s*["']?([^"'\s}]+)["']?\s*}}`)
+
+func expandEmbeds(rawMarkdown string) string {
+	return embedRegex.ReplaceAllStringFunc(rawMarkdown, func(match string) string {
+		submatches := embedRegex.FindStringSubmatch(match)
+		if len(submatches) < 2 {
+			return match
+		}
+		relPath := submatches[1]
+
+		// Try static/relPath first, then direct relative path
+		candidates := []string{
+			filepath.Join("static", relPath),
+			relPath,
+		}
+
+		var data []byte
+		var readErr error
+		found := false
+		for _, p := range candidates {
+			if b, err := os.ReadFile(p); err == nil {
+				data = b
+				found = true
+				break
+			} else {
+				readErr = err
+			}
+		}
+
+		if !found {
+			log.Printf("Warning: failed to embed file %q: %v", relPath, readErr)
+			return fmt.Sprintf("\n\n<!-- Failed to embed %s: %v -->\n\n", relPath, readErr)
+		}
+
+		return fmt.Sprintf("\n\n<div class=\"interactive-container\" data-embed=\"%s\">\n%s\n</div>\n\n", filepath.Base(relPath), string(data))
+	})
 }
 
 func formatBottomHeavy(title string) template.HTML {
