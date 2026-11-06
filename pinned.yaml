@@ -1,8 +1,0 @@
-# portfolio-site/pinned.yaml
-writings:
-  - "first-post" # Example, assuming a blog post with this filename exists
-
-projects:
-  - "embroidery"
-  - "kamvas"
-  - "slotmap"

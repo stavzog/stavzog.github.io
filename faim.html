@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#ffffff">
+  <title>Stavros Zografos - GISST UI Testing</title>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+  <link rel="preload" href="fonts/CommitMonoV143-VF.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="masthead">
+    <div class="meta"><span class="tailors" role="img" aria-label="Tailors tab"></span></div>
+    <div class="name">STAVROS ZOGRAFOS</div>
+    <div class="meta">RESEARCH ASSISTANT<br>FAIM LAB @ POMONA COLLEGE<br>FEB-MAY 2025</div>
+  </header>
+
+  <h1 class="copyright">~*~ GISST UI Testing ~*~</h1>
+
+  <a class="back" href="index.html">← Back</a>
+
+  <h2>OVERVIEW</h2>
+  <p class="lede">At Faim Lab, I contributed automated tests and frontend refactoring to GISST. The <a href="https://gisst.dev/">Game and Interactive Software Scholarship Toolkit</a> (GISST) is a web-based tool for citing and retrieving recorded software performances and saved states.</p>
+
+  <h2>TEST THE USER FLOW</h2>
+  <p>I added Playwright tests that interact with the player and verify the resulting UI state:</p>
+  <ul>
+    <li>Saving a state adds an entry to the saved-states list.</li>
+    <li>Starting and finishing a performance adds a replay to the replay list.</li>
+  </ul>
+
+  <p>In the frontend embed, I decoupled GISST URL parsing and configuration fetching from the player setup. This made it straightforward to test URL formats and server error responses with Vitest, without initializing the emulator UI.</p>
+
+  <h2>TECHNOLOGIES</h2>
+  <p>Playwright · Vitest · TypeScript</p>
+
+  <h2>LEARN MORE</h2>
+  <p><a href="https://github.com/shftgroup/gisst">GISST on GitHub</a>, <a href="mailto:stavzog@gmail.com">Email</a>, <a href="https://www.linkedin.com/in/stavzog/">LinkedIn</a></p>
+
+  <p class="end">~*~</p>
+
+  <script src="link_script.js"></script>
+</body>
+</html>

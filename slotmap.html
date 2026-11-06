@@ -1,0 +1,328 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#ffffff">
+  <title>Slotmap Microlibrary by Stavros Zografos</title>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+  <link rel="preload" href="fonts/CommitMonoV143-VF.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    .slotmap-demo {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .slotmap-demo.wide {
+      width: min(860px, calc(100vw - 40px));
+    }
+
+    .slotmap-toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .slotmap-toolbar button {
+      padding: 3px 8px;
+      border: 1px solid var(--ink);
+      background: #fff;
+      color: var(--ink);
+      font: inherit;
+      cursor: pointer;
+    }
+
+    .slotmap-toolbar button:hover:not(:disabled) {
+      color: var(--blue);
+    }
+
+    .slotmap-toolbar button:disabled {
+      color: var(--muted);
+      cursor: default;
+    }
+
+    .slotmap-capacity,
+    .slotmap-status {
+      color: var(--muted);
+    }
+
+    .slotmap-status {
+      min-height: 1.65em;
+      margin: 0;
+    }
+
+    .slotmap-table-wrap {
+      width: 100%;
+      overflow-x: auto;
+    }
+
+    .slotmap-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-variant-numeric: tabular-nums;
+      text-align: left;
+    }
+
+    .slotmap-table th,
+    .slotmap-table td {
+      padding: 7px 9px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .slotmap-table thead tr:first-child th {
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 350;
+    }
+
+    .slotmap-table thead tr:last-child th {
+      font-weight: 500;
+    }
+
+    .slotmap-table th:nth-child(3),
+    .slotmap-table td:nth-child(3) {
+      border-left: 1px solid var(--line);
+    }
+
+    .slotmap-table td:first-child {
+      color: var(--pink);
+    }
+
+    .slotmap-table td:nth-child(2) {
+      color: var(--blue);
+    }
+
+    .slotmap-table td:nth-child(n + 3):nth-child(-n + 5) {
+      color: var(--green);
+    }
+
+    .slotmap-table td button {
+      border: 0;
+      background: transparent;
+      color: var(--muted);
+      font: 350 18px/1 var(--mono);
+      cursor: pointer;
+    }
+
+    .slotmap-table td button:hover {
+      color: var(--pink);
+    }
+
+    .slotmap-table button:focus-visible,
+    .slotmap-toolbar button:focus-visible {
+      outline: 2px solid var(--blue);
+      outline-offset: 3px;
+    }
+
+    .slotmap-note {
+      color: var(--muted);
+    }
+
+    @media (max-width: 600px) {
+      .slotmap-demo.wide {
+        position: static;
+        left: auto;
+        width: 100%;
+        transform: none;
+      }
+
+      .slotmap-table,
+      .slotmap-table tbody {
+        display: block;
+        width: 100%;
+      }
+
+      .slotmap-table thead {
+        display: none;
+      }
+
+      .slotmap-table tbody tr {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+        gap: 2px 12px;
+        padding: 8px 0;
+        border-bottom: 1px solid var(--line);
+      }
+
+      .slotmap-table tbody td {
+        display: flex;
+        min-width: 0;
+        align-items: baseline;
+        justify-content: space-between;
+        gap: 8px;
+        padding: 2px 0;
+        border: 0;
+        overflow-wrap: anywhere;
+      }
+
+      .slotmap-table tbody td::before {
+        color: var(--muted);
+        content: attr(data-label);
+        font-size: 10px;
+        text-transform: uppercase;
+      }
+
+      .slotmap-table tbody td:nth-child(3) {
+        border: 0;
+      }
+
+      .slotmap-table tbody td:last-child {
+        justify-content: flex-end;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="masthead">
+    <div class="meta"><span class="tailors" role="img" aria-label="Tailors tab"></span></div>
+    <div class="name">STAVROS ZOGRAFOS</div>
+    <div class="meta">PUBLISHED RUST CRATE<br>APR 2026</div>
+  </header>
+
+  <h1 class="copyright">~*~ Slotmap Microlibrary ~*~</h1>
+
+  <a class="back" href="index.html">← Back</a>
+
+  <h2>PROJECT OVERVIEW</h2>
+  <p class="lede">A tiny Rust slot manager for stable handles and packed data. It tracks identity and dense indices, while leaving data ownership and memory layout to your application.</p>
+
+  <div class="slotmap-demo wide" aria-label="Interactive slot manager and external data arrays demo">
+    <div class="slotmap-toolbar">
+      <button id="add-item" type="button">+ Add item</button>
+      <span class="slotmap-capacity" id="slotmap-capacity"></span>
+    </div>
+    <div class="slotmap-table-wrap">
+      <table class="slotmap-table">
+        <thead>
+          <tr>
+            <th colspan="2">SLOTMANAGER</th>
+            <th colspan="3">YOUR SEPARATE DENSE ARRAYS</th>
+            <th></th>
+          </tr>
+          <tr>
+            <th>Handle</th>
+            <th>Index</th>
+            <th>label[]</th>
+            <th>x[]</th>
+            <th>y[]</th>
+            <th>Remove</th>
+          </tr>
+        </thead>
+        <tbody id="slotmap-rows"></tbody>
+      </table>
+    </div>
+    <p class="slotmap-status" id="slotmap-status" aria-live="polite"></p>
+  </div>
+
+  <h2>WHY SEPARATE THE MANAGER?</h2>
+  <p>The manager owns the mapping, not the payload. When an item is removed, it supplies the dense indices needed to swap the last entry into the gap. The user's code applies that swap to each array.</p>
+  <p>A handle combines a slot and generation. The slot can be reused, while the generation makes an old handle stale instead of accidentally pointing to the new item.</p>
+
+  <h2>USED IN PARAMETRIC EMBROIDERY</h2>
+  <p>Nodes and user guide points use handles as stable IDs. Their numeric data stays in packed buffers, so the frontend can refer to an entity without relying on a dense index that may change.</p>
+
+  <h2>LEARN MORE</h2>
+  <p><a href="https://github.com/stavzog/slotmap_microlib">GitHub Repository</a>, <a href="https://crates.io/crates/slotmap_microlib">Crates.io</a>, <a href="mailto:stavzog@gmail.com">Email</a></p>
+
+  <p class="end">~*~</p>
+
+  <script>
+    (() => {
+      const capacity = 4;
+      const denseToSlot = [];
+      const sparseToIndex = Array(capacity).fill(null);
+      const generations = Array(capacity).fill(0);
+      const freeSlots = [3, 2, 1, 0];
+      const data = { labels: [], x: [], y: [] };
+      const rows = document.querySelector("#slotmap-rows");
+      const status = document.querySelector("#slotmap-status");
+      const capacityLabel = document.querySelector("#slotmap-capacity");
+      let nextLabel = 4;
+
+      const add = (label, x, y) => {
+        const slot = freeSlots.pop();
+        const index = denseToSlot.length;
+        generations[slot] += 1;
+        denseToSlot[index] = slot;
+        sparseToIndex[slot] = index;
+        data.labels.push(label);
+        data.x.push(x);
+        data.y.push(y);
+        return { slot, generation: generations[slot], index };
+      };
+
+      const remove = (slot, generation) => {
+        if (generations[slot] !== generation) return;
+        const index = sparseToIndex[slot];
+        if (index === null) return;
+
+        const lastIndex = denseToSlot.length - 1;
+        const removedLabel = data.labels[index];
+        const movedSlot = denseToSlot[lastIndex];
+        const movedLabel = index === lastIndex ? null : data.labels[lastIndex];
+        const movedGeneration = generations[movedSlot];
+
+        for (const values of Object.values(data)) {
+          values[index] = values[lastIndex];
+          values.pop();
+        }
+
+        denseToSlot[index] = movedSlot;
+        denseToSlot.pop();
+        sparseToIndex[movedSlot] = index;
+        generations[slot] += 1;
+        sparseToIndex[slot] = null;
+        freeSlots.push(slot);
+
+        status.textContent = movedLabel
+          ? `${removedLabel} removed; ${movedLabel} moved to dense[${index}] with handle ${movedSlot}:g${movedGeneration}. Handle ${slot}:g${generation} is now stale.`
+          : `${removedLabel} removed. Handle ${slot}:g${generation} is now stale.`;
+        render();
+      };
+
+      const render = () => {
+        rows.innerHTML = denseToSlot.map((slot, index) => {
+          const generation = generations[slot];
+          return `<tr>
+            <td data-label="Handle">${slot}:g${generation}</td>
+            <td data-label="Dense index">${index}</td>
+            <td data-label="label[]">${data.labels[index]}</td>
+            <td data-label="x[]">${data.x[index]}</td>
+            <td data-label="y[]">${data.y[index]}</td>
+            <td data-label="Remove"><button type="button" data-slot="${slot}" data-generation="${generation}" aria-label="Remove ${data.labels[index]}">×</button></td>
+          </tr>`;
+        }).join("") || '<tr><td colspan="6">No active data</td></tr>';
+        capacityLabel.textContent = `${denseToSlot.length} active · ${freeSlots.length} free slots`;
+      };
+
+      add("Point 1", 120, 40);
+      add("Point 2", 240, 90);
+      add("Point 3", 360, 140);
+      render();
+      status.textContent = "Each handle resolves to a current dense index.";
+
+      rows.addEventListener("click", (event) => {
+        const button = event.target.closest("button[data-slot]");
+        if (button) remove(Number(button.dataset.slot), Number(button.dataset.generation));
+      });
+
+      document.querySelector("#add-item").addEventListener("click", () => {
+        if (freeSlots.length === 0) {
+          status.textContent = "All four demo slots are active. Remove one to make room.";
+          return;
+        }
+        const label = `Point ${nextLabel}`;
+        const item = add(label, 120 + nextLabel * 60, 40 + nextLabel * 25);
+        nextLabel += 1;
+        status.textContent = `${label} added as handle ${item.slot}:g${item.generation} at dense[${item.index}].`;
+        render();
+      });
+    })();
+  </script>
+
+  <script src="link_script.js"></script>
+</body>
+</html>

@@ -1,0 +1,223 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#ffffff">
+  <title>Stavros Zografos Infiterra Experience</title>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+  <link rel="preload" href="fonts/CommitMonoV143-VF.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    .flow,
+    .pricing-readout {
+      margin: 0;
+      overflow-x: auto;
+      font: 350 12px/1.7 var(--mono);
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
+    }
+
+    .flow--muted {
+      color: var(--muted);
+    }
+
+    .flow--blue {
+      color: var(--blue);
+    }
+
+    .pricing-demo {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .quantity-label {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      color: var(--muted);
+    }
+
+    .quantity-label output {
+      color: var(--ink);
+      font-weight: 500;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .pricing-demo input[type="range"] {
+      width: 100%;
+      margin: 0;
+      accent-color: var(--blue);
+      cursor: pointer;
+    }
+
+    .pricing-readout {
+      color: var(--green);
+      font-variant-numeric: tabular-nums;
+    }
+
+    @media (max-width: 520px) {
+      .quantity-label {
+        flex-wrap: wrap;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="masthead">
+    <div class="meta"><span class="tailors" role="img" aria-label="Tailors tab"></span></div>
+    <div class="name">STAVROS ZOGRAFOS</div>
+    <div class="meta">SWE INTERN<br>INFITERRA INC.<br>JUN - AUG 2026</div>
+  </header>
+
+  <h1 class="copyright">~*~ Decoupling a legacy pricing system ~*~</h1>
+
+  <a class="back" href="index.html">← Back</a>
+
+  <p class="lede">At <a href="https://www.infiterra.com/">Infiterra</a>, a product's price was being resolved along two separate paths. I mapped out the legacy system, designed a dedicated pricing engine, and built a runnable proof of concept for an auditable calculation path.</p>
+
+  <div class="pricing-demo">
+    <label class="quantity-label" for="quantity">
+      <span>ORDER QUANTITY</span>
+      <span><output id="quantity-output" for="quantity">12</output> units</span>
+    </label>
+    <input id="quantity" type="range" min="1" max="20" value="12" step="1">
+    <pre class="pricing-readout" id="pricing-readout" aria-live="polite"></pre>
+  </div>
+
+  <h2>THE PROBLEM</h2>
+  <pre class="flow flow--muted">STOREFRONT  ──&gt;  legacy store procedures  ──&gt;  finished price
+CHARGING    ──&gt;  separate rule replay ──&gt;  re-derived price</pre>
+  <p>The storefront and charging paths read overlapping pricing data but did not resolve the same full set of rules. As a result, pricing logic had more than one home, and the two paths could drift.</p>
+
+  <h2>MY CONTRIBUTION</h2>
+  <p>Under the guidance of an Infiterra senior architect, I worked on defining a dedicated pricing service.</p>
+  <ul>
+    <li>Traced the legacy resolution flow across SQL, charging, and the order boundary.</li>
+    <li>Designed a dedicated pricing service with explicit data and calculation boundaries.</li>
+    <li>Implemented a runnable prototype for the math engine, quantity-tier pipeline, and per-segment audit trail.</li>
+  </ul>
+  <p>These efforts led to the publishing of a Request for Comment (RFC) jira ticket. The next step is to write an Architecture Decision Record (ADR).</p>
+
+  <h2>THE PROPOSED FLOW</h2>
+  <p>Resolve against the pricing context itself, decoupled from the order item. Then return one result that the rest of the platform can consume.</p>
+  <pre class="flow flow--blue">(product, quantity, customer, currency, date)
+        │
+        ├─ resolve baseline cost candidates
+        ├─ collect ordered modifiers and quantity scopes
+        ├─ slice quantity into affected segments; apply pricing steps
+        └─ return resolved price + segment-by-segment explanation
+  </pre>
+
+  <div>
+  <details>
+    <summary>One small math model for many pricing rules</summary>
+    <p class="detail-copy">The prototype represents a pricing operation as <code>clamp(m × x + b, lo, hi)</code>. Setting, scaling, adding, and applying a floor become data in a <code>PriceStep</code> and there is no separate branches in the calculation loop.</p>
+  </details>
+  <details>
+    <summary>Quantity tiers are slices, not a whole-order switch</summary>
+    <p class="detail-copy">The engine splits the requested quantity at rule boundaries. A tier's modifier applies only to its matching units, so a discount for units 6–10 does not leak onto units 1–5 or 11 onward.</p>
+  </details>
+  <details>
+    <summary>Keep data access out of the calculation</summary>
+    <p class="detail-copy">Candidate adapters find the baseline; modifier adapters emit ordered, quantity-scoped steps. The engine receives those inputs in process and returns a resolved price with a separate audit trail for each quantity segment.</p>
+  </details>
+  </div>
+
+  <h2>CONTINUE THE CONVERSATION</h2>
+  <p><a href="mailto:stavzog@gmail.com">Email</a>, <a href="https://github.com/stavzog">GitHub</a>, <a href="https://www.linkedin.com/in/stavzog/">LinkedIn</a></p>
+
+  <p class="end">~*~</p>
+
+  <script>
+    (() => {
+      const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+      const glyphs = "ABEFGIJLMNPQRSTUWYZ01234789#%*+-?@$&ΓΔΘΛΞΣΦΨ";
+      const MIN_DURATION_MS = 400;
+      const MAX_DURATION_MS = 800;
+      const MS_PER_CHARACTER = 50;
+      const animations = new WeakMap();
+
+      document.querySelectorAll("a").forEach((link) => {
+        const original = link.textContent;
+        if (!original.trim()) return;
+        link.setAttribute("aria-label", original);
+
+        const scramble = () => {
+          if (reduceMotion.matches || animations.has(link)) return;
+          const animation = { frame: 0 };
+          const duration = Math.min(MAX_DURATION_MS, Math.max(MIN_DURATION_MS, original.length * MS_PER_CHARACTER));
+          const startedAt = performance.now();
+          animations.set(link, animation);
+
+          const render = (now) => {
+            if (animations.get(link) !== animation) return;
+            const progress = Math.min(1, (now - startedAt) / duration);
+            const settledCharacters = Math.floor(progress * original.length);
+            link.textContent = [...original].map((character, index) => {
+              if (index < settledCharacters || !/[a-z0-9]/i.test(character)) return character;
+              return glyphs[Math.floor(Math.random() * glyphs.length)];
+            }).join("");
+
+            if (progress < 1) animation.frame = requestAnimationFrame(render);
+            else {
+              link.textContent = original;
+              animations.delete(link);
+            }
+          };
+
+          animation.frame = requestAnimationFrame(render);
+        };
+
+        const restore = () => {
+          if (link.matches(":hover, :focus")) return;
+          const animation = animations.get(link);
+          if (!animation) return;
+          cancelAnimationFrame(animation.frame);
+          link.textContent = original;
+          animations.delete(link);
+        };
+
+        link.addEventListener("pointerenter", scramble);
+        link.addEventListener("pointerleave", restore);
+        link.addEventListener("focus", scramble);
+        link.addEventListener("blur", restore);
+      });
+
+      const quantity = document.querySelector("#quantity");
+      const quantityOutput = document.querySelector("#quantity-output");
+      const readout = document.querySelector("#pricing-readout");
+      const tiers = [
+        { from: 1, to: 5, discount: 0 },
+        { from: 6, to: 10, discount: 10 },
+        { from: 11, to: 20, discount: 15 },
+      ];
+      const basePrice = 100;
+      const currency = new Intl.NumberFormat("en-IE", { style: "currency", currency: "EUR" });
+
+      const updatePricing = () => {
+        const requested = Number(quantity.value);
+        let total = 0;
+        const lines = tiers.flatMap((tier) => {
+          const units = Math.max(0, Math.min(requested, tier.to) - tier.from + 1);
+          if (units === 0) return [];
+          const unitPrice = basePrice * (1 - tier.discount / 100);
+          const segmentTotal = units * unitPrice;
+          total += segmentTotal;
+          return [`QTY ${String(tier.from).padStart(2, "0")}–${String(Math.min(requested, tier.to)).padStart(2, "0")}  ${String(units).padStart(2, "0")} × ${currency.format(unitPrice)} = ${currency.format(segmentTotal)}`];
+        });
+
+        quantityOutput.value = requested;
+        quantityOutput.textContent = requested;
+        lines.push("─".repeat(49));
+        lines.push(`TOTAL ${currency.format(total)}  /  AVG ${currency.format(total / requested)} per unit`);
+        readout.textContent = lines.join("\n");
+      };
+
+      quantity.addEventListener("input", updatePricing);
+      updatePricing();
+    })();
+  </script>
+</body>
+</html>

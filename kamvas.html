@@ -1,0 +1,237 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#ffffff">
+  <title>Project Kamvas by Stavros Zografos</title>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+  <link rel="preload" href="fonts/CommitMonoV143-VF.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    .kamvas-demo {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .kamvas-workspace {
+      display: flex;
+      width: max-content;
+      align-items: flex-start;
+      gap: 12px;
+    }
+
+    .workspace-modules {
+      display: flex;
+      align-items: stretch;
+      gap: 12px;
+    }
+
+    .workspace-module {
+      display: flex;
+      width: clamp(76px, 24vw, 250px);
+      min-width: 0;
+      min-height: 150px;
+      flex: 0 0 clamp(76px, 24vw, 250px);
+      flex-direction: column;
+      border: 1px solid var(--ink);
+    }
+
+    .module-toolbar {
+      display: flex;
+      min-height: 32px;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      padding: 3px 8px;
+      border-bottom: 1px solid var(--ink);
+      font-weight: 500;
+    }
+
+    .module-close,
+    .module-add {
+      border: 0;
+      background: transparent;
+      color: var(--muted);
+      font: 350 18px/1 var(--mono);
+      cursor: pointer;
+    }
+
+    .module-close {
+      width: 24px;
+      height: 24px;
+      padding: 0;
+    }
+
+    .module-content {
+      display: grid;
+      min-height: 116px;
+      flex: 1;
+      place-items: center;
+      padding: 14px;
+      color: var(--muted);
+      text-align: center;
+    }
+
+    .module-add {
+      width: 28px;
+      height: 32px;
+      padding: 0;
+      color: var(--ink);
+      font-size: 22px;
+    }
+
+    .module-add:disabled {
+      color: var(--line);
+      cursor: default;
+    }
+
+    .module-close:focus-visible,
+    .module-add:focus-visible {
+      outline: 2px solid var(--blue);
+      outline-offset: 3px;
+    }
+
+    .workspace-status {
+      color: var(--muted);
+    }
+  </style>
+</head>
+<body>
+  <header class="masthead">
+    <div class="meta"><span class="tailors" role="img" aria-label="Tailors tab"></span></div>
+    <div class="name">STAVROS ZOGRAFOS</div>
+    <div class="meta">PROJECT KAMVAS<br>NOV 2025-JAN 2026</div>
+  </header>
+
+  <h1 class="copyright">~*~ Project Kamvas by Stavros Zografos ~*~</h1>
+
+  <a class="back" href="index.html">← Back</a>
+
+  <h2 id="project-title">PROJECT OVERVIEW</h2>
+  <p class="lede">
+      Project Kamvas was inspired by the <a href="https://www.mercuryos.com/">Mercury OS</a> concept and it allows you to arrange dynamic modules (Markdown, Code, Web, and more) side by side on an infinite canvas. It is currently in an MVP Stage.
+  </p>
+
+  <p>Project Kamvas allows users to plan and build by composing custom workflows. Click the "+" button to compose yours.</p>
+  <div class="kamvas-demo">
+    <div class="kamvas-workspace" aria-label="Kamvas workspace preview">
+      <div class="workspace-modules" id="workspace-modules">
+        <article class="workspace-module" data-module="web" aria-label="Web module">
+          <div class="module-toolbar">
+            <span>Web</span>
+            <button class="module-close" type="button" aria-label="Remove Web module">×</button>
+          </div>
+          <div class="module-content">Load a web page to do research</div>
+        </article>
+      </div>
+      <button class="module-add" id="module-add" type="button" aria-label="Add next module">+</button>
+    </div>
+    <p class="workspace-status" id="workspace-status" aria-live="polite">1 of 3 modules visible · next: Markdown</p>
+  </div>
+
+  <h2 id="state-management">STATE MANAGEMENT</h2>
+  <p>
+      Project Kamvas was built with <a href="https://kotlinlang.org/multiplatform/">Kotlin Multiplatform</a> and follows OOP principles. I also rolled out a custom state management solution. It integrates concepts from <a href="https://zustand.docs.pmnd.rs/getting-started/introduction">Zustand</a> which is known for its simplicity and ease of use.
+  </p>
+  <div>
+      <details>
+        <summary>Unidirectional State Flow</summary>
+        <p class="detail-copy">State flow is unidirectional and it is based on the Model-View-Intent (MVI) approach.</p>
+      </details>
+      <details>
+        <summary>Immutable State Objects</summary>
+        <p class="detail-copy">Module state is stored as immutable data classes and actions (command like "update text") produce new state objects.</p>
+      </details>
+      <details>
+        <summary>Extensibility (Open/Closed Principle)</summary>
+        <p class="detail-copy">New module types, actions, and renderers can be added without modifying the core ModuleViewModel or the main ModuleView Composable.</p>
+      </details>
+      <details>
+        <summary>Handcrafted DI</summary>
+        <p class="detail-copy">Dependency management is explicit via constructor injection and a central DependencyContainer.</p>
+      </details>
+  </div>
+  <p>
+      The idea guiding all architecture decisions was that the code should have minimal bloat and no external library "magic".
+  </p>
+
+  <h2 id="next-steps">NEXT STEPS</h2>
+  <p>
+      Development of this project is currently paused. There are plans to rebuild this project under a different architecture where Kamvas will be written in Rust and it will manage webview modules.
+  </p>
+
+  <h2 id="learn-more">LEARN MORE</h2>
+  <p>
+      Visit the <a href="https://github.com/stavzog">GitHub Repository</a> to see the code and learn more about the project. Alternatively, reach out on <a href="https://www.linkedin.com/in/stavzog/">LinkedIn</a> or by <a href="mailto:stavzog@gmail.com">Email</a>.
+  </p>
+
+  <p class="end">~*~</p>
+  <script>
+    (() => {
+      const workspace = document.querySelector("#workspace-modules");
+      const addButton = document.querySelector("#module-add");
+      const status = document.querySelector("#workspace-status");
+      const moduleTypes = [
+        { id: "web", name: "Web", content: "Load a web page to do research" },
+        { id: "markdown", name: "Markdown", content: "Write down notes" },
+        { id: "code", name: "Code", content: "Sketch out quick code" },
+      ];
+
+      const updateWorkspace = () => {
+        const visible = workspace.querySelectorAll("[data-module]").length;
+        const next = moduleTypes.find((module) => !workspace.querySelector(`[data-module="${module.id}"]`));
+        const row = workspace.parentElement;
+        const textColumn = row.parentElement;
+        row.classList.toggle("wide", row.getBoundingClientRect().width > textColumn.clientWidth);
+        addButton.disabled = !next;
+        status.textContent = next
+          ? `${visible} of 3 modules visible · next: ${next.name}`
+          : "3 of 3 modules visible · workspace complete";
+      }
+
+      const createModule = (module) => {
+        const element = document.createElement("article");
+        element.className = "workspace-module";
+        element.dataset.module = module.id;
+        element.setAttribute("aria-label", `${module.name} module`);
+        element.innerHTML = `
+          <div class="module-toolbar">
+            <span>${module.name}</span>
+            <button class="module-close" type="button" aria-label="Remove ${module.name} module">×</button>
+          </div>
+          <div class="module-content">${module.content}</div>
+        `;
+        element.querySelector(".module-close").addEventListener("click", () => {
+          element.remove();
+          updateWorkspace();
+        });
+        return element;
+      };
+
+      workspace.querySelector(".module-close").addEventListener("click", (event) => {
+        event.currentTarget.closest(".workspace-module").remove();
+        updateWorkspace();
+      });
+
+      addButton.addEventListener("click", () => {
+        const next = moduleTypes.find((module) => !workspace.querySelector(`[data-module="${module.id}"]`));
+        if (!next) return;
+        const element = createModule(next);
+        const order = new Map(moduleTypes.map((module, index) => [module.id, index]));
+        const modules = [...workspace.querySelectorAll("[data-module]"), element]
+          .sort((a, b) => order.get(a.dataset.module) - order.get(b.dataset.module));
+        workspace.replaceChildren(...modules);
+        updateWorkspace();
+      });
+
+      window.addEventListener("resize", updateWorkspace);
+      updateWorkspace();
+    })();
+  </script>
+
+  <script src="link_script.js"></script>
+
+</body>
+</html>

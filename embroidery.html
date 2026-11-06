@@ -1,0 +1,345 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#ffffff">
+  <title>Stavros Zografos - Parametric Embroidery</title>
+  <link rel="preload" href="fonts/CommitMonoV143-VF.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+  <style>
+    .steps li {
+      padding: 0;
+      color: var(--muted);
+    }
+
+    .steps li::before {
+      content: none;
+    }
+
+    .steps strong {
+      color: var(--ink);
+      font-weight: 500;
+    }
+
+    .guide-activity.wide {
+      width: min(860px, calc(100vw - 40px));
+    }
+
+    .guide-view {
+      display: block;
+      width: 100%;
+      aspect-ratio: 640 / 180;
+      overflow: visible;
+      touch-action: none;
+    }
+
+    .activity-label {
+      fill: var(--muted);
+      font: 500 9px var(--mono);
+    }
+
+    .engine-point {
+      fill: var(--blue);
+    }
+
+    .ugp-marker {
+      fill: var(--pink);
+      stroke: #fff;
+      stroke-width: 2;
+      cursor: grab;
+      touch-action: none;
+    }
+
+    .ugp-marker:active {
+      cursor: grabbing;
+    }
+
+    @media (max-width: 600px) {
+      .guide-activity.wide {
+        position: static;
+        left: auto;
+        width: 100%;
+        transform: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="masthead">
+    <div class="meta"><span class="tailors" role="img" aria-label="Tailors tab"></span></div>
+    <div class="name">STAVROS ZOGRAFOS</div>
+    <div class="meta">RESEARCH ASSISTANT<br>DOODLE LAB @ POMONA COLLEGE<br>FEB-AUG 2026</div>
+  </header>
+
+  <h1 class="copyright">~*~ Parametric Embroidery App ~*~</h1>
+
+  <a class="back" href="index.html">← Back</a>
+
+    <h2 id="project-title">PROJECT OVERVIEW</h2>
+    <p class="lede">A four-person team built a browser-based editor for reusable stitch patterns. I led the design and implementation of the Rust/WebAssembly backend that turns user-authored guide points into deterministic geometry for the frontend.</p>
+
+    <div class="guide-activity wide">
+      <svg class="guide-view" id="activity-view" viewBox="60 60 640 180" role="group" aria-label="Circle, V-shape, and pattern interpolated points. Drag the red guide points to update them.">
+        <text class="activity-label" x="130" y="82">V SHAPE</text>
+        <text class="activity-label" x="330" y="82">CIRCLE</text>
+        <text class="activity-label" x="580" y="82">PATTERN</text>
+        <g id="engine-points" aria-hidden="true"></g>
+        <g id="ugp-points"></g>
+      </svg>
+    </div>
+
+    <h2 id="architecture-title">BACKEND DESIGN</h2>
+    <p>User-generated points (UGPs) express geometric intent. Generators run math algorithms to transform them into interpolated points (IPs). A DAG allows for the chaining of multiple generators to produce complex shapes. </p>
+    <p>All IPs and UGPs are stored into flat buffers. The frontend reads slices of the buffers and interprets them as shapes. The IP buffer is exported as a sequence of stitch commands for the embroidery machine.</p>
+
+
+    <div>
+        <details>
+          <summary>The UGP Binder</summary>
+          <p class="detail-copy">Maps user-manipulated guide points to a node and port.</p>
+        </details>
+        <details>
+          <summary>The Port-Aware DAG</summary>
+          <p class="detail-copy">Nodes are generator functions, ports are arguments, edges define chains of functions.</p>
+        </details>
+        <details>
+          <summary>The CSR Graph</summary>
+          <p class="detail-copy">Flattens the graph into a CSR representation for efficient traversal. Helps nodes identify incoming edges so they can pull input data from the cache.</p>
+        </details>
+        <details>
+          <summary>The Shape Packaging &amp; Frontend Contract</summary>
+          <p class="detail-copy">At a terminal node, output becomes a Shape record containing the final IPs, the node that created it, and the generator it used. The Shape record is read by the frontend.</p>
+        </details>
+    </div>
+
+    <h2 id="trace-title">EXECUTION TRACE</h2>
+    <details class="trace">
+      <summary>TRACE A CIRCLE WITH A ZIGZAG STITCH</summary>
+      <ol class="steps">
+        <li><strong>1. Create Guide Points.</strong> Two guide points define a circle's center and radius; three more define a V-shaped stitch guide.</li>
+        <li><strong>2. Define dependencies.</strong> The pattern generator receives the V-shaped guide on port 0 and the circle on port 1.</li>
+        <li><strong>3. Execute.</strong> Kahn's algorithm runs generators when their required inputs are available; downstream nodes pull inputs from the cache</li>
+        <li><strong>4. Package.</strong> The terminal generator's interpolated points are returned to the frontend as a Shape record.</li>
+      </ol>
+    </details>
+
+  <h2 id="contact">LEARN MORE</h2>
+  <p><a href="mailto:stavzog@gmail.com">Email</a>, <a href="https://github.com/stavzog">GitHub</a>, <a href="https://www.linkedin.com/in/stavzog/">LinkedIn</a></p>
+
+  <p class="end">~*~</p>
+  <script type="module">
+    import init, { BackendFacade } from "./pkg/backend.js";
+
+    await init();
+
+    const backend = new BackendFacade();
+    const svgNamespace = "http://www.w3.org/2000/svg";
+    const circleBounds = { minX: 270, minY: 70, maxX: 430, maxY: 230 };
+    const patternOffset = 250;
+    const minRadius = 20;
+    const maxRadius = 70;
+    const viewMargin = 10;
+
+    // These are the x and y coordinates of the V-shape guide points.
+    const zigzag_coordinates = [
+      { x: 100, y: 100 },
+      { x: 150, y: 200 },
+      { x: 200, y: 100 },
+    ];
+    const zigzag_points = zigzag_coordinates.map(({ x, y }) => backend.add_ugp(x, y));
+
+    // These two points define the circle center and radius.
+    const circle_coordinates = [
+      { x: 350, y: 150 },
+      { x: 350, y: 100 },
+    ];
+    const circle_points = circle_coordinates.map(({ x, y }) => backend.add_ugp(x, y));
+    const pattern_circle_points = circle_coordinates.map(({ x, y }) =>
+      backend.add_ugp(x + patternOffset, y),
+    );
+
+    const vshape_node = backend.add_node(1, backend.discrete_shape_gen(), new Float32Array());
+
+    const circle_node = backend.add_node(2, backend.circle_gen(), new Float32Array([10]));
+    circle_points.forEach((point, port) => backend.bind_ugp(circle_node, port, point));
+
+    const pattern_circle_node = backend.add_node(2, backend.circle_gen(), new Float32Array([10]));
+    pattern_circle_points.forEach((point, port) => backend.bind_ugp(pattern_circle_node, port, point));
+
+    zigzag_points.forEach((point) => backend.bind_ugp(vshape_node, 0, point));
+
+    const pattern_node = backend.add_node(2, backend.copy_between_gen(), new Float32Array());
+    backend.connect_nodes(vshape_node, pattern_node, 0);
+    backend.connect_nodes(pattern_circle_node, pattern_node, 1);
+
+    // This terminal node produces the final zigzag circle points.
+    const pattern_show_node = backend.add_node(1, backend.line_fill_gen(), new Float32Array([4]));
+    backend.connect_nodes(pattern_node, pattern_show_node, 0);
+
+    // The identity node exposes circle points as a terminal output.
+    const circle_show_node = backend.add_node(1, backend.identity_gen(), new Float32Array());
+    backend.connect_nodes(circle_node, circle_show_node, 0);
+
+    // This terminal node exposes interpolated points along the V shape.
+    const v_shape_show_node = backend.add_node(1, backend.line_fill_gen(), new Float32Array([10]));
+    backend.connect_nodes(vshape_node, v_shape_show_node, 0);
+
+    backend.run();
+
+    const activityView = document.querySelector("#activity-view");
+    const enginePointGroup = document.querySelector("#engine-points");
+    const ugpGroup = document.querySelector("#ugp-points");
+    const guidePoints = [
+      { id: "center", point: circle_coordinates[0], label: "Circle center" },
+      { id: "radius", point: circle_coordinates[1], label: "Circle radius" },
+      ...zigzag_coordinates.map((point, index) => ({
+        id: `v-${index}`,
+        point,
+        label: `V-shape guide point ${index + 1}`,
+      })),
+    ];
+    let activeDrag = null;
+
+    guidePoints.forEach(({ id, label }) => {
+      const marker = document.createElementNS(svgNamespace, "circle");
+      marker.setAttribute("class", "ugp-marker");
+      marker.setAttribute("r", "3");
+      marker.setAttribute("aria-label", label);
+      marker.dataset.ugp = id;
+      ugpGroup.append(marker);
+    });
+
+    function renderGuidePoints() {
+      [...ugpGroup.children].forEach((marker, index) => {
+        const { point } = guidePoints[index];
+        marker.setAttribute("cx", point.x);
+        marker.setAttribute("cy", point.y);
+      });
+    }
+
+    function renderPoints() {
+      const xs = backend.ips_x();
+      const ys = backend.ips_y();
+      const points = document.createDocumentFragment();
+
+      for (let index = 0; index < backend.ips_len(); index += 1) {
+        const point = document.createElementNS(svgNamespace, "circle");
+        point.setAttribute("class", "engine-point");
+        point.setAttribute("cx", xs[index]);
+        point.setAttribute("cy", ys[index]);
+        point.setAttribute("r", "1.6");
+        points.append(point);
+      }
+      enginePointGroup.replaceChildren(points);
+    }
+
+    function renderActivity() {
+      renderPoints();
+      renderGuidePoints();
+    }
+
+    function circleRadius() {
+      const center = circle_coordinates[0];
+      const edge = circle_coordinates[1];
+      return Math.hypot(edge.x - center.x, edge.y - center.y);
+    }
+
+    function clamp(value, min, max) {
+      return Math.min(max, Math.max(min, value));
+    }
+
+    function moveCenterTo(point) {
+      const center = circle_coordinates[0];
+      const edge = circle_coordinates[1];
+      const radius = circleRadius();
+      const x = clamp(point.x, circleBounds.minX + radius + viewMargin, circleBounds.maxX - radius - viewMargin);
+      const y = clamp(point.y, circleBounds.minY + radius + viewMargin, circleBounds.maxY - radius - viewMargin);
+      const dx = x - center.x;
+      const dy = y - center.y;
+      center.x = x;
+      center.y = y;
+      edge.x += dx;
+      edge.y += dy;
+    }
+
+    function maximumRadius(center, directionX, directionY) {
+      let limit = maxRadius;
+      if (directionX > 0) limit = Math.min(limit, (circleBounds.maxX - viewMargin - center.x) / directionX);
+      if (directionX < 0) limit = Math.min(limit, (center.x - circleBounds.minX - viewMargin) / -directionX);
+      if (directionY > 0) limit = Math.min(limit, (circleBounds.maxY - viewMargin - center.y) / directionY);
+      if (directionY < 0) limit = Math.min(limit, (center.y - circleBounds.minY - viewMargin) / -directionY);
+      return Math.max(minRadius, limit);
+    }
+
+    function moveRadiusTo(point) {
+      const center = circle_coordinates[0];
+      const dx = point.x - center.x;
+      const dy = point.y - center.y;
+      const distance = Math.hypot(dx, dy);
+      if (!distance) return;
+
+      const directionX = dx / distance;
+      const directionY = dy / distance;
+      const radius = clamp(distance, minRadius, maximumRadius(center, directionX, directionY));
+      circle_coordinates[1].x = center.x + directionX * radius;
+      circle_coordinates[1].y = center.y + directionY * radius;
+    }
+
+    function moveGuidePoint(id, point) {
+      if (id.startsWith("v-")) {
+        const index = Number(id.slice(2));
+        zigzag_coordinates[index].x = clamp(point.x, 60 + viewMargin, 240 - viewMargin);
+        zigzag_coordinates[index].y = clamp(point.y, 60 + viewMargin, 240 - viewMargin);
+      } else if (id === "center") {
+        moveCenterTo(point);
+      } else {
+        moveRadiusTo(point);
+      }
+    }
+
+    function updateBackend() {
+      circle_points.forEach((point, index) => {
+        backend.update_ugp(point, circle_coordinates[index].x, circle_coordinates[index].y);
+      });
+      pattern_circle_points.forEach((point, index) => {
+        backend.update_ugp(point, circle_coordinates[index].x + patternOffset, circle_coordinates[index].y);
+      });
+      zigzag_points.forEach((point, index) => {
+        backend.update_ugp(point, zigzag_coordinates[index].x, zigzag_coordinates[index].y);
+      });
+      backend.run();
+      renderActivity();
+    }
+
+    function svgPosition(event) {
+      const point = activityView.createSVGPoint();
+      point.x = event.clientX;
+      point.y = event.clientY;
+      return point.matrixTransform(activityView.getScreenCTM().inverse());
+    }
+
+    activityView.addEventListener("pointerdown", (event) => {
+      const marker = event.target.closest("[data-ugp]");
+      if (!marker) return;
+      activeDrag = marker.dataset.ugp;
+      event.preventDefault();
+      activityView.setPointerCapture(event.pointerId);
+    });
+
+    activityView.addEventListener("pointermove", (event) => {
+      if (activeDrag === null) return;
+      moveGuidePoint(activeDrag, svgPosition(event));
+      updateBackend();
+    });
+
+    const stopDragging = () => { activeDrag = null; };
+    activityView.addEventListener("pointerup", stopDragging);
+    activityView.addEventListener("pointercancel", stopDragging);
+
+    renderActivity();
+  </script>
+  <script src="link_script.js"></script>
+</body>
+</html>
